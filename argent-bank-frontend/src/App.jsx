@@ -1,15 +1,23 @@
-import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Home from './Pages/Home';
-import Error from './Pages/Error';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+import Home from "./Pages/Home";
+import SignIn from "./Pages/Signin";
+import User from "./Pages/User";
+import PrivateRoute from "./Components/PrivateRoute";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="*" element={<Error />} />
-    </Routes>
-  )
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/profile" element={<PrivateRoute><User /></PrivateRoute>} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
