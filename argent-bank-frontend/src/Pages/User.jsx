@@ -1,13 +1,67 @@
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../Store/Index";
+import { updateUserProfile } from "../api/auth";
 
 function User() {
-  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { user, token } = useSelector((state) => state.auth);
+  const [isEditing, setIsEditing] = useState(false);
+  const [userName, setUserName] = useState(user?.userName || "");
+  const [firstName, setFirstName] = useState(user?.firstName || "");
+  const [lastName, setLastName] = useState(user?.lastName || "");
+
+  const handleSave = async () => {
+    try {
+      const updatedUser = await updateUserProfile(token, firstName, lastName, userName);
+      dispatch(setUser(updatedUser));
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <main className="main bg-dark">
       <div className="header">
-        <h1>Welcome back<br />{user?.firstName} {user?.lastName}!</h1>
-        <button className="edit-button">Edit Name</button>
+        {isEditing ? (
+          <>
+            <h1>Edit user info</h1>
+            <div className="edit-form">
+              <div className="edit-form-row">
+                <label>User name:</label>
+                <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} />
+              </div>
+              <div className="edit-form-row">
+                <label>First name:</label>
+                <input type="text" value={firstName} disabled />
+              </div>
+              <div className="edit-form-row">
+                <label>Last name:</label>
+                <input type="text" value={lastName} disabled />
+              </div>
+              <div className="edit-form-buttons">
+                <button className="edit-button" onClick={handleSave}>
+                  Save
+                </button>
+                <button className="edit-button" onClick={() => setIsEditing(false)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <h1>
+              Welcome back
+              <br />
+              {user?.firstName} {user?.lastName}!
+            </h1>
+            <button className="edit-button" onClick={() => setIsEditing(true)}>
+              Edit Name
+            </button>
+          </>
+        )}
       </div>
 
       <h2 className="sr-only">Accounts</h2>
