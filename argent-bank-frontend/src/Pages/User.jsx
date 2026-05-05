@@ -73,7 +73,7 @@ function User() {
           <p className="account-amount-description">Available Balance</p>
         </div>
         <div className="account-content-wrapper cta">
-          <button className="transaction-button">View transactions</button>
+          <button className="transaction-button">›</button>
         </div>
       </section>
 
@@ -84,7 +84,7 @@ function User() {
           <p className="account-amount-description">Available Balance</p>
         </div>
         <div className="account-content-wrapper cta">
-          <button className="transaction-button">View transactions</button>
+          <button className="transaction-button">›</button>
         </div>
       </section>
 
@@ -95,7 +95,9 @@ function User() {
           <p className="account-amount-description">Current Balance</p>
         </div>
         <div className="account-content-wrapper cta">
-          <button className="transaction-button">View transactions</button>
+          <button className="transaction-button">
+            <button className="transaction-button">›</button>
+          </button>
         </div>
       </section>
     </main>
