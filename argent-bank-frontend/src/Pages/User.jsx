@@ -1,20 +1,21 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setUser } from "../Store/Index";
+import { setUser, setUserName } from "../Store/Index";
 import { updateUserProfile } from "../api/auth";
 
 function User() {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
-  const [userName, setUserName] = useState(user?.userName || "");
-  const [firstName, setFirstName] = useState(user?.firstName || "");
-  const [lastName, setLastName] = useState(user?.lastName || "");
+  const [userName, setUserNameLocal] = useState(user?.userName || user?.firstName || "");
+  const [firstName] = useState(user?.firstName || "");
+  const [lastName] = useState(user?.lastName || "");
 
   const handleSave = async () => {
     try {
-      const updatedUser = await updateUserProfile(token, firstName, lastName, userName);
-      dispatch(setUser(updatedUser));
+      const updatedUser = await updateUserProfile(token, firstName, lastName);
+      dispatch(setUser(updatedUser));        
+      dispatch(setUserName(userName));     
       setIsEditing(false);
     } catch (err) {
       console.error(err);
@@ -30,7 +31,11 @@ function User() {
             <div className="edit-form">
               <div className="edit-form-row">
                 <label>User name:</label>
-                <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} />
+                <input
+                  type="text"
+                  value={userName}
+                  onChange={(e) => setUserNameLocal(e.target.value)}
+                />
               </div>
               <div className="edit-form-row">
                 <label>First name:</label>
@@ -41,20 +46,15 @@ function User() {
                 <input type="text" value={lastName} disabled />
               </div>
               <div className="edit-form-buttons">
-                <button className="edit-button" onClick={handleSave}>
-                  Save
-                </button>
-                <button className="edit-button" onClick={() => setIsEditing(false)}>
-                  Cancel
-                </button>
+                <button className="edit-button" onClick={handleSave}>Save</button>
+                <button className="edit-button" onClick={() => setIsEditing(false)}>Cancel</button>
               </div>
             </div>
           </>
         ) : (
           <>
             <h1>
-              Welcome back
-              <br />
+              Welcome back<br />
               {user?.firstName} {user?.lastName}!
             </h1>
             <button className="edit-button" onClick={() => setIsEditing(true)}>
@@ -95,7 +95,7 @@ function User() {
           <p className="account-amount-description">Current Balance</p>
         </div>
         <div className="account-content-wrapper cta">
-            <button className="transaction-button">›</button>
+          <button className="transaction-button">›</button>
         </div>
       </section>
     </main>

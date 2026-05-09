@@ -23,7 +23,7 @@ function Header() {
           <>
             <Link className="main-nav-item" to="/profile">
               <i className="fa fa-user-circle"></i>
-              {user?.firstName}
+              {user?.userName || user?.firstName}
             </Link>
             <button className="main-nav-item" onClick={() => dispatch(logout())}>
               <i className="fa fa-sign-out"></i>
